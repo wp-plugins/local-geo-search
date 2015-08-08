@@ -47,12 +47,12 @@ Yes! The Local GEO Search pages use the same theme the rest of your site uses an
 
 We do not guarantee top page results for your key terms. Page ranking depends on how competitive your keywords and industry are, and other algorithms. We have seen great results with our SEO platform, and can make the best suggestions for you to see success.
 
-== Screenshots ==
-
-1. Local Geo Search Logo
-
 
 == Changelog ==
+
+= 0.40 =
+* Usbility tweaks
+* Uniform trailing slashes
 
 = 0.32 =
 * Public release of Local GEO Search Wordpress plugin

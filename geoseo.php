@@ -3,7 +3,7 @@
 * Plugin Name: Local Geo Search
 * Plugin URI: https://www.localgeosearch.com
 * Description: Local GEO Search creates hundreds of location specific pages on your site to target your services in your market.
-* Version: 0.32
+* Version: 0.40
 * Author: Elite Impressions, LLC
 * Author URI: http://www.localgeosearch.com
 **/
@@ -239,8 +239,8 @@ function geo_seo_createGenericSiteMapData() {
 		$url = array();
 
 		$url[] = array(
-			'url'				=> get_site_url().'/'.$slug,
-			'url_parts'			=>	'/'.$slug,
+			'url'				=> get_site_url().'/'.$slug.'/',
+			'url_parts'			=>	'/'.$slug.'/',
 			'priority'			=> '1',
 			'frequency'			=> 'always',
 			'modification_date' => $lastChanged
@@ -250,8 +250,8 @@ function geo_seo_createGenericSiteMapData() {
 			foreach($rawTerms['data']['terms'] as $term) {
 
 				$url[] = array(
-					'url'				=> get_site_url().'/'.$slug.'/'.$term['sid'],
-					'url_parts'			=>	'/'.$slug.'/'.$term['sid'],
+					'url'				=> get_site_url().'/'.$slug.'/'.$term['sid'].'/',
+					'url_parts'			=>	'/'.$slug.'/'.$term['sid'].'/',
 					'priority'			=> '1',
 					'frequency'			=> 'always',
 					'modification_date' => $lastChanged
@@ -259,8 +259,8 @@ function geo_seo_createGenericSiteMapData() {
 
 				foreach($rawLocations['data']['locations'] as $location) {
 					$url[] = array(
-						'url'				=> get_site_url().'/'.$slug.'/'.$term['sid'].'/'.$location['sid'],
-						'url_parts'			=> '/'.$slug.'/'.$term['sid'].'/'.$location['sid'],
+						'url'				=> get_site_url().'/'.$slug.'/'.$term['sid'].'/'.$location['sid'].'/',
+						'url_parts'			=> '/'.$slug.'/'.$term['sid'].'/'.$location['sid'].'/',
 						'priority'			=> '1',
 						'frequency'			=> 'always',
 						'modification_date' => $lastChanged
@@ -273,8 +273,8 @@ function geo_seo_createGenericSiteMapData() {
 		if(isset($rawTerms) && isset($rawTerms['data']) && isset($rawTerms['data']['locations'])) {
 			foreach($rawLocations['data']['locations'] as $location) {
 				$url[] = array(
-					'url'				=> get_site_url().'/'.$slug.'/'.$location['sid'],
-					'url_parts'			=> '/'.$slug.'/'.$location['sid'],
+					'url'				=> get_site_url().'/'.$slug.'/'.$location['sid'].'/',
+					'url_parts'			=> '/'.$slug.'/'.$location['sid'].'/',
 					'priority'			=> '1',
 					'frequency'			=> 'always',
 					'modification_date' => $lastChanged
@@ -297,7 +297,7 @@ function geo_seo_createGenericSiteMapData() {
 function geo_seo_yoastCanonicalTag( $canonical ) {
 	$slug = geo_seo_getData('slug');
 
-	$url = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+	$url = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
     if (substr($url,0,strlen($slug)) == $slug)
     {
 		$canonical = false;
@@ -309,7 +309,7 @@ function geo_seo_yoastCanonicalTag( $canonical ) {
 function geo_seo_allinoneCanonicalTag( $canonical ) {
 	$slug = geo_seo_getData('slug');
 
-	$url = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+	$url = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
     if (substr($url,0,strlen($slug)) == $slug)
     {
 		$canonical = false;
