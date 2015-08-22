@@ -50,6 +50,9 @@ We do not guarantee top page results for your key terms. Page ranking depends on
 
 == Changelog ==
 
+= 1.0.1 =
+* Patched caching in upgrade
+
 = 1.0.0 =
 * Breaks backwards compatibility. If you already have the plugin installed, you will have to reauthenticate using the new method
 * New authentication method with single token tied to specfic website instead of username password
