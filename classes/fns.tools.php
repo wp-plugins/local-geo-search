@@ -7,10 +7,6 @@ function geo_seo_getData( $key=null ) {
 	$api = 'https://api.localgeosearch.com';
 	$host = $_SERVER['HTTP_HOST'];
 
-	if($_SESSION['geoseoPlugin']['testing']) {
-		$host = 'milehirafting.com';
-	}
-
 	$data = array(
 		'slug'			=>	isset($settings['slug']) ? $settings['slug'] : 'local',
 		'api'			=>	$api,

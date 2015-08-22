@@ -50,6 +50,9 @@ We do not guarantee top page results for your key terms. Page ranking depends on
 
 == Changelog ==
 
+= 1.0.2 =
+* Patched AllInOne sitemap integration bug
+
 = 1.0.1 =
 * Patched caching in upgrade
 

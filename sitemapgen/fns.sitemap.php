@@ -97,7 +97,7 @@ function geo_seo_yoastSitemap( $content ) {
 
 
 function geo_seo_allinoneSitemap( $option ) {
-return $option;
+
 	$fullURL = geoseotools::full_url($_SERVER);
 
 	 if(strpos($fullURL,'sitemap.xml')===false) {
