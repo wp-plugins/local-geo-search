@@ -23,7 +23,7 @@ class GEOSEOSettingsPage
      */
     public function add_plugin_page()
     {
-		add_menu_page( 'Local Geo Search', 'Local Geo Search', 'manage_options', 'geo_seo_admin', array( $this, 'create_admin_page' ), plugins_url( 'geoseo/images/icon.png' ), 6 );
+		add_menu_page( 'Local Geo Search', 'Local Geo Search', 'manage_options', 'geo_seo_admin', array( $this, 'create_admin_page' ), 'dashicons-location', 6 );
 
         // This page will be under "Settings"
 //        add_options_page(
@@ -80,55 +80,44 @@ class GEOSEOSettingsPage
 
         add_settings_section(
             'geo_seo_login_section', // ID
-            '1) Log In', // Title
-            array( $this, 'section_callback' ), // Callback
+            'Authenticate with website token', // Title
+            array( $this, 'geo_seo_login_section' ), // Callback
             'geo_seo_admin' // Page
         );
 
 			add_settings_field(
-				'username', // ID
-				'Username', // Title
-				array( $this, 'field_username_callback' ), // Callback
-				'geo_seo_admin', // Page
-				'geo_seo_login_section' // Section
+				'token',
+				'Token',
+				array( $this, 'field_token_callback' ),
+				'geo_seo_admin',
+				'geo_seo_login_section'
 			);
-
 			add_settings_field(
-				'password',
-				'Password',
-				array( $this, 'field_password_callback' ),
+				'websiteName',
+				'',
+				array( $this, 'field_websiteName_callback' ),
+				'geo_seo_admin',
+				'geo_seo_login_section'
+			);
+			add_settings_field(
+				'websiteID',
+				'',
+				array( $this, 'field_websiteID_callback' ),
+				'geo_seo_admin',
+				'geo_seo_login_section'
+			);
+			add_settings_field(
+				'orgID',
+				'',
+				array( $this, 'field_orgID_callback' ),
 				'geo_seo_admin',
 				'geo_seo_login_section'
 			);
 
 
         add_settings_section(
-            'geo_seo_website_section', // ID
-            '2) Choose Website', // Title
-            array( $this, 'section_callback' ), // Callback
-            'geo_seo_admin' // Page
-        );
-
-			add_settings_field(
-				'organization', // ID
-				'Organization', // Title
-				array( $this, 'field_organization_callback' ), // Callback
-				'geo_seo_admin', // Page
-				'geo_seo_website_section' // Section
-			);
-
-			add_settings_field(
-				'website', // ID
-				'Website', // Title
-				array( $this, 'field_website_callback' ), // Callback
-				'geo_seo_admin', // Page
-				'geo_seo_website_section' // Section
-			);
-
-
-        add_settings_section(
             'geo_seo_plugin_section', // ID
-            '3) Plugin Options', // Title
+            'Plugin Options', // Title
             array( $this, 'section_plugin_callback' ), // Callback
             'geo_seo_admin' // Page
         );
@@ -156,50 +145,57 @@ class GEOSEOSettingsPage
 		//try log in
 
 			$apiURL = geo_seo_getData('api');
+			$data = geo_seo_getData();
 
 			$params = array(
-				'url'=>$apiURL.'/authentication',
+				'url'=>$apiURL.'/pluginhtml/auth',
+				'fields'		=>	[
+					'url'		=>	$data['host'],
+					'slug'		=>	$data['slug']
+				],
 				'authentication'=>array(
 					'basic'	=>	true,
-					'user'	=>	$input['username'],
-					'password'=>$input['password']
+					'user'		=>	'api',
+					'password'	=>	$input['token']
 				)
 			);
 
 			$user = json_decode(geo_seo_easyCurl($params),true);
 
 			if($user['status']=='OK') {
-				$input['organization'] = $user['data']['org_id'];
-				if(!isset($input['website']) || $input['website']=='') {
-					add_settings_error(
-						'geo_seo_error',
-						'login-msg',
-						__('Authenticated successfully. Choose website.'),
-						'updated'
-					);
-				}
-				else {
-					$this->options = get_option( 'geo_seo_option_name' );
-					$url = get_site_url().'/'.$this->options['slug'];
-					add_settings_error(
-						'geo_seo_error',
-						'login-msg',
-						__('Successfully saved. Local GEO Search pages are now available at <a href="'.$url.'">'.$url.'</a>'),
-						'updated'
-					);
-				}
 
-			}
-			else {
-				$input['organization'] = 0;
-				$input['website'] = 0;
+				delete_option( 'geo_seo_error' );
+
+				$input['websiteName'] = $user['data']['website']['name'];
+				$input['websiteID'] = $user['data']['website']['id'];
+				$input['orgID'] = $user['data']['website']['org_id'];
+
 				add_settings_error(
 					'geo_seo_error',
 					'login-msg',
-					__('Incorrect username or password'),
+					__('Authenticated successfully with Local GEO Search website '.$user['data']['website']['name']),
+					'updated'
+				);
+
+			}
+			else {
+				$input['websiteName'] = null;
+				$input['websiteID'] = null;
+				$input['orgID'] = null;
+
+				add_settings_error(
+					'geo_seo_error',
+					'login-msg',
+					__($user['data']['msg']),
 					'error'
 				);
 			}
+
+			if($data['slug']!=$input['slug']) {
+				geo_seo_cacheSys::put('previousslug', $data['slug'], $data['slug']);
+				geo_seo_cacheSys::deleteCachedItem('sitemap', 'sitemapjson');
+			}
+
 
         return $input;
     }
@@ -217,26 +213,36 @@ class GEOSEOSettingsPage
         print 'Define the URL slug that your Local GEO Search pages will be created under. This should not be a page that exists on your site, Local Geo Search will create it for you.';
     }
 
-
-    /**
-     * Get the settings option array and print one of its values
-     */
-    public function field_username_callback()
+	public function geo_seo_login_section()
     {
-        printf(
-            '<input type="text" id="username" name="geo_seo_option_name[username]" value="%s" />',
-            isset( $this->options['username'] ) ? esc_attr( $this->options['username']) : ''
-        );
+		$data = geo_seo_getData();
+
+		$errorMessage = get_option( 'geo_seo_error' );
+
+		if(isset($data['website']) && $data['website']!=null) {
+			if($errorMessage!==false) {
+				print '<div style="font-weight:bold;color:red;">This is a problem that prevented a user from seeing a Local GEO Search page: '.$errorMessage.'</div>';
+			}
+			else {
+				print '<div style="font-weight:bold; color:#7ad03a;">Successfully authenticated with Local GEO Search website '.$data['websiteName'].'</div>';
+			}
+		}
+		else {
+			print '<div style="font-weight:bold;color:red;">Your plugin isn\'t authenticated yet. Enter the Local GEO Search website token and click Save.</div>';
+		}
+
+
+
     }
 
     /**
      * Get the settings option array and print one of its values
      */
-    public function field_password_callback()
+    public function field_token_callback()
     {
         printf(
-            '<input type="password" id="password" name="geo_seo_option_name[password]" value="%s" />',
-            isset( $this->options['password'] ) ? esc_attr( $this->options['password']) : ''
+            '<input type="token" id="token" name="geo_seo_option_name[token]" value="%s" />',
+            isset( $this->options['token'] ) ? esc_attr( $this->options['token']) : ''
         );
     }
 
@@ -251,58 +257,28 @@ class GEOSEOSettingsPage
         );
     }
 
-    /**
-     * Get the settings option array and print one of its values
-     */
-    public function field_website_callback()
-    {
-		if($this->options['username']!='') {
+	public function field_websiteName_callback() {
+		printf(
+            '<input type="hidden" id="websiteName" name="geo_seo_option_name[websiteName]" value="%s" />',
+            isset( $this->options['websiteName'] ) ? esc_attr( $this->options['websiteName']) : ''
+        );
+	}
 
-			$apiURL = geo_seo_getData('api');
+	public function field_websiteID_callback() {
+		printf(
+            '<input type="hidden" id="websiteID" name="geo_seo_option_name[websiteID]" value="%s" />',
+            isset( $this->options['websiteID'] ) ? esc_attr( $this->options['websiteID']) : ''
+        );
+	}
 
-			$select = '<select id="website" name="geo_seo_option_name[website]"><option value="">Select site</option>';
+	public function field_orgID_callback() {
+		printf(
+            '<input type="hidden" id="orgID" name="geo_seo_option_name[orgID]" value="%s" />',
+            isset( $this->options['orgID'] ) ? esc_attr( $this->options['orgID']) : ''
+        );
+	}
 
-			$organization = json_decode(geo_seo_easyCurl(array( 'url'=>$apiURL.'/organization/get/'.$this->options['organization'] )),true);
 
-
-			foreach($organization['data']['websites'] as $site) {
-				$selected = '';
-				if($this->options['website']==$site['id']) {
-					$selected= 'selected="selected"';
-				}
-				$select .= '<option value="'.$site['id'].'" '.$selected.'>'.$site['name'].' - '.$site['url'].'</option>';
-			}
-			$select .= '</select>';
-
-			echo $select;
-		}
-		else {
-			echo 'Log in for list of your websites.';
-		}
-    }
-
-    /**
-     * Get the settings option array and print one of its values
-     */
-    public function field_organization_callback()
-    {
-
-		if($this->options['username']!='') {
-
-			$apiURL = geo_seo_getData('api');
-
-			$organization = json_decode(geo_seo_easyCurl(array( 'url'=>$apiURL.'/organization/get/'.$this->options['organization'] )),true);
-
-			 printf(
-				'<input type="hidden" id="organization" name="geo_seo_option_name[organization]" value="%s" /> '.$organization['data']['name'],
-				isset( $this->options['organization'] ) ? esc_attr( $this->options['organization']) : ''
-			);
-		}
-		else {
-			echo 'Log in for your organization.';
-		}
-
-    }
 }
 }
 

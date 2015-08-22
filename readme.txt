@@ -1,14 +1,14 @@
 === Local GEO Search ===
 Contributors: andrewsauder
-Donate link: https://www.localgeosearch.com/
+Donate link: https://localgeosearch.com/
 Tags: seo, marketing, geolocation
 Requires at least: 3.0.1
-Tested up to: 4.2.2
+Tested up to: 4.3
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Local GEO Search creates hundreds of location specific pages on your site to target your services in your market.
+Local GEO Search creates hundreds of location specific pages on your site to target your services in your geographic market.
 
 
 == Description ==
@@ -26,7 +26,7 @@ Get Started:
 == Installation ==
 1. Upload the zip file in Wordpress or unzip it and copy the geoseo directory into the wp-content/plugins directory
 1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Visit the plugin settings to log in to your Local GEO Search account and link up your website
+1. Visit the plugin settings to link your website with the terms and locations you've added (you'll need to know the website token from localgeosearch.com)
 
 
 == Frequently Asked Questions ==
@@ -49,6 +49,13 @@ We do not guarantee top page results for your key terms. Page ranking depends on
 
 
 == Changelog ==
+
+= 1.0.0 =
+* Breaks backwards compatibility. If you already have the plugin installed, you will have to reauthenticate using the new method
+* New authentication method with single token tied to specfic website instead of username password
+* Site URL must match URL saved in Local GEO Search
+* Enhanced integration with AllInOneSEO sitemap.xml
+* Decreased required cloud calls per Local GEO Search page load
 
 = 0.40 =
 * Usbility tweaks
