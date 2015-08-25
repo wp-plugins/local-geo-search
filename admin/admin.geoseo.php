@@ -149,10 +149,10 @@ class GEOSEOSettingsPage
 
 			$params = array(
 				'url'=>$apiURL.'/pluginhtml/auth',
-				'fields'		=>	[
+				'fields'		=>	array(
 					'url'		=>	$data['host'],
 					'slug'		=>	$data['slug']
-				],
+				),
 				'authentication'=>array(
 					'basic'	=>	true,
 					'user'		=>	'api',
