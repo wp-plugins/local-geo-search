@@ -36,13 +36,13 @@ function geo_seoMagic($v, $url) {
 
 		//if this parses as valid json when routing a url, it means we got an API error back
 		$checkforErrors = json_decode($html, true);
-		if(json_last_error()===JSON_ERROR_NONE){
+		if($checkforErrors!=null){
 			$html = '';
 			//save error message so we can pull it out on the admin site
-			error_log($checkforErrors['data']['msg']);
 			delete_option( 'geo_seo_error' );
 			add_option( 'geo_seo_error', $checkforErrors['data']['msg'], '', false );
 			geo_seoThrowErrorPage();
+			return;
 		}
 		else {
 			delete_option( 'geo_seo_error' );
