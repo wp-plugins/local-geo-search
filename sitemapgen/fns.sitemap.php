@@ -10,22 +10,22 @@ function geo_seo_createGenericSiteMapData() {
 
 		$fullURL = geoseotools::full_url($_SERVER);
 
-		$params = [
+		$params = array(
 			'url'			=> $settings['api'].'/pluginhtml/route',
 			'method'		=> 'post',
-			'fields'		=>	[
+			'fields'		=>	array(
 				'url'		=>	$settings['host'],
 				'slug'		=>	$settings['slug'],
 				'urlType'	=>	'rewrite',
 				'fullURL'	=>	$fullURL,
 				'format'	=>	'json'
-			],
-			'authentication'=> [
+			),
+			'authentication'=> array(
 				'basic'		=>	true,
 				'user'		=>	'api',
 				'password'	=>	$settings['token']
-			]
-		];
+			)
+		);
 
 		$rawRSP = geoseotools::easyCURL($params);
 		$json = json_decode($rawRSP, true);

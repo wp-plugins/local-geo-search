@@ -11,21 +11,21 @@ function geo_seoMagic($v, $url) {
 
 	$fullURL = geoseotools::full_url($_SERVER);
 
-	$params = [
+	$params = array(
 		'url'			=> $settings['api'].'/pluginhtml/route',
 		'method'		=> 'post',
-		'fields'		=>	[
+		'fields'		=>	array(
 			'url'		=>	$settings['host'],
 			'slug'		=>	$settings['slug'],
 			'urlType'	=>	'rewrite',
 			'fullURL'	=>	$fullURL
-		],
-		'authentication'=> [
+		),
+		'authentication'=> array(
 			'basic'		=>	true,
 			'user'		=>	'api',
 			'password'	=>	$settings['token']
-		]
-	];
+		)
+	);
 
 	$html = geoseotools::easyCURL($params);
 

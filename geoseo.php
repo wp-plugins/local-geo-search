@@ -3,7 +3,7 @@
 * Plugin Name: Local Geo Search
 * Plugin URI: https://www.localgeosearch.com
 * Description: Local GEO Search creates hundreds of location specific pages on your site to target your services in your market.
-* Version: 1.0.2
+* Version: 1.0.3
 * Author: Elite Impressions, LLC
 * Author URI: http://www.localgeosearch.com
 **/
