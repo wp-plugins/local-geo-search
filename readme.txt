@@ -50,6 +50,9 @@ We do not guarantee top page results for your key terms. Page ranking depends on
 
 == Changelog ==
 
+= 1.0.5 =
+* Fixed incorrect h1 tags in content
+
 = 1.0.4 =
 * Fixed more definitions to enable plugin to work with PHP 5.3x
 

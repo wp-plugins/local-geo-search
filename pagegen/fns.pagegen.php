@@ -48,12 +48,14 @@ function geo_seoMagic($v, $url) {
 			delete_option( 'geo_seo_error' );
 		}
 
+		//pull the first h1 tag out and use it for the title
 		preg_match('/<h1.*?>(.*?)<\/h1>/i', $html, $match);
-
 		if(isset($match[1]) && $match[1]!='') {
 			$v->title = $match[1];
-			$html = preg_replace('/<h1.*?>(.*?)<\/h1>/i', '', $html);
+			$html = preg_replace('/<h1.*?>(.*?)<\/h1>/i', '', $html, 1);
 		}
+
+		//build the rest of the content of the page
 		$v->body = $html;
 		$v->template = 'page';
 		$v->slug = $url;

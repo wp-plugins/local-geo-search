@@ -35,15 +35,17 @@ if (!class_exists('geoseo_Virtual_Themed_Pages')) {
 		public $slug = '';
 		private $vpages = array();  // the main array of virtual pages
 		private $mypath = '';
-		public $blankcomments = "blank-comments.php";
+		public $blankcomments = "view.blankcomments.php";
 
 		function __construct($plugin_path = null, $blankcomments = null) {
-			if (empty($plugin_path))
+			if (empty($plugin_path)) {
 				$plugin_path = dirname(__FILE__);
+			}
 			$this->mypath = $plugin_path;
 
-			if (!empty($blankcomments))
+			if(!empty($blankcomments)) {
 				$this->blankcomments = $blankcomments;
+			}
 
 			// Virtual pages are checked in the 'parse_request' filter.
 			// This action starts everything off if we are a virtual page
@@ -74,8 +76,9 @@ if (!class_exists('geoseo_Virtual_Themed_Pages')) {
 				}
 			}
 			// Do nothing if not matched
-			if (!$matched)
+			if (!$matched) {
 				return;
+			}
 
 			// setup hooks and filters to generate virtual movie page
 			//add_action('template_redirect', array(&$this, 'template_redir'));
@@ -84,7 +87,7 @@ if (!class_exists('geoseo_Virtual_Themed_Pages')) {
 			// we also force comments removal; a comments box at the footer of
 			// a page is rather meaningless.
 			// This requires the blank_comments.php file be provided
-			add_filter('comments_template', array(&$this, 'disable_comments'), 11);
+			//add_filter('comments_template', array(&$this, 'disable_comments'), 11);
 
 			// Call user content generation function
 			// Called last so it can remove any filters it doesn't like
@@ -102,8 +105,10 @@ if (!class_exists('geoseo_Virtual_Themed_Pages')) {
 			unset($this->body);
 			call_user_func_array($func, array(&$this, $p));
 
-			if (!isset($this->body)) //assert
-				wp_die("Virtual Themed Pages: must save ->body [VTP07]");
+			if (!isset($this->body)) { //assert
+				//wp_die("Virtual Themed Pages: must save ->body [VTP07]");
+				$this->body = '';
+			}
 
 			return($wp);
 		}
@@ -223,8 +228,9 @@ if (!class_exists('geoseo_Virtual_Themed_Pages')) {
 		// empty template file which returns nothing, thus eliminating
 		// comments reliably.
 		function disable_comments($file) {
-			if (file_exists($this->blankcomments))
-				return($this->mypath . '/' . $blankcomments);
+			if (file_exists($this->blankcomments)) {
+				return($this->mypath . '/' . $this->blankcomments);
+			}
 			return($file);
 		}
 
