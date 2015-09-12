@@ -2,7 +2,7 @@
 function geo_seo_pageNew() {
 	$slug = geo_seo_getData('slug');
 	$vp = new geoseo_Virtual_Themed_Pages();
-	$vp->add('/'.$slug.'\/*+/i', 'geo_seoMagic');
+	$vp->add($slug, 'geo_seoMagic');
 }
 
 function geo_seoMagic($v, $url) {

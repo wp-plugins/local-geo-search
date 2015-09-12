@@ -60,17 +60,12 @@ if (!class_exists('geoseo_Virtual_Themed_Pages')) {
 		// If we have one, call the appropriate content generation function
 		//
 		function vtp_parse_request(&$wp) {
-			//global $wp;
-			//if (empty($wp->query_vars['pagename']))
-			//	return; // page isn't permalink
 
-
-			//$p = $wp->query_vars['pagename'];
-			$p = $_SERVER['REQUEST_URI'];
+			$pAr = explode('/', trim($_SERVER['REQUEST_URI'], '/ '));
 
 			$matched = 0;
 			foreach ($this->vpages as $regexp => $func) {
-				if (preg_match($regexp, $p)) {
+				if($regexp==$pAr[0]) {
 					$matched = 1;
 					break;
 				}
@@ -105,8 +100,7 @@ if (!class_exists('geoseo_Virtual_Themed_Pages')) {
 			unset($this->body);
 			call_user_func_array($func, array(&$this, $p));
 
-			if (!isset($this->body)) { //assert
-				//wp_die("Virtual Themed Pages: must save ->body [VTP07]");
+			if (!isset($this->body)) {
 				$this->body = '';
 			}
 
