@@ -75,6 +75,8 @@ if (!class_exists('geoseo_Virtual_Themed_Pages')) {
 				return;
 			}
 
+			remove_action('wp_head', 'rel_canonical');
+			
 			// setup hooks and filters to generate virtual movie page
 			//add_action('template_redirect', array(&$this, 'template_redir'));
 			add_filter('the_posts', array(&$this, 'vtp_createdummypost'));

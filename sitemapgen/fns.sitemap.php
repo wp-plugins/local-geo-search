@@ -53,9 +53,9 @@ function geo_seo_createGenericSiteMapData() {
 function geo_seo_yoastCanonicalTag( $canonical ) {
 	$slug = geo_seo_getData('slug');
 
-	$url = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
-    if (substr($url,0,strlen($slug)) == $slug)
-    {
+	$pAr = explode('/', trim($_SERVER['REQUEST_URI'], '/ '));
+
+	if($slug==$pAr[0]) {
 		$canonical = false;
 	}
 
@@ -65,8 +65,9 @@ function geo_seo_yoastCanonicalTag( $canonical ) {
 function geo_seo_allinoneCanonicalTag( $canonical ) {
 	$slug = geo_seo_getData('slug');
 
-	$url = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
-    if (substr($url,0,strlen($slug)) == $slug) {
+	$pAr = explode('/', trim($_SERVER['REQUEST_URI'], '/ '));
+
+	if($slug==$pAr[0]) {
 		$canonical = false;
 	}
 

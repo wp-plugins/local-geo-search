@@ -49,6 +49,9 @@ We do not guarantee top page results for your key terms. Page ranking depends on
 
 
 == Changelog ==
+= 1.0.7 =
+* Updated canonical tags
+
 = 1.0.6 =
 * Updated slug regex so that the slug must match the page request exactly to hijack the page
 
