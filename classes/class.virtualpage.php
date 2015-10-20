@@ -76,7 +76,7 @@ if (!class_exists('geoseo_Virtual_Themed_Pages')) {
 			}
 
 			remove_action('wp_head', 'rel_canonical');
-			
+
 			// setup hooks and filters to generate virtual movie page
 			//add_action('template_redirect', array(&$this, 'template_redir'));
 			add_filter('the_posts', array(&$this, 'vtp_createdummypost'));
@@ -168,13 +168,12 @@ if (!class_exists('geoseo_Virtual_Themed_Pages')) {
 			$wp_query->comment_count = 0;
 			// -1 for current_comment displays comment if not logged in!
 			$wp_query->current_comment = null;
-			$wp_query->is_singular = 1;
 
 			//as
 			$wp_query->is_attachment = false;
 
 			$wp_query->post = $p;
-			$wp_query->posts = array($p);
+			$wp_query->posts = $p;
 			$wp_query->queried_object = $p;
 			$wp_query->queried_object_id = $p->ID;
 			$wp_query->current_post = $p->ID;

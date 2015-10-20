@@ -49,6 +49,9 @@ We do not guarantee top page results for your key terms. Page ranking depends on
 
 
 == Changelog ==
+= 1.0.8 =
+* Fixed issue that caused link pages to duplicate content when using certain themes
+
 = 1.0.7 =
 * Updated canonical tags
 
