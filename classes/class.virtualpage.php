@@ -35,6 +35,7 @@ if (!class_exists('geoseo_Virtual_Themed_Pages')) {
 		public $slug = '';
 		private $vpages = array();  // the main array of virtual pages
 		private $mypath = '';
+		private $hitCount = 0;
 		public $blankcomments = "view.blankcomments.php";
 
 		function __construct($plugin_path = null, $blankcomments = null) {
@@ -113,10 +114,17 @@ if (!class_exists('geoseo_Virtual_Themed_Pages')) {
 		// From the WP view, a post == a page
 		//
 		function vtp_createdummypost($posts) {
+			//don't return the content again for pages after the first
+			if($this->hitCount>0) {
+				return $posts;
+			}
+			$this->hitCount++;
 
 			// have to create a dummy post as otherwise many templates
 			// don't call the_content filter
 			global $wp, $wp_query;
+
+			$wp_query->posts_per_page = 1;
 
 			//unset($wp_query->query['attachment']);
 
@@ -132,7 +140,8 @@ if (!class_exists('geoseo_Virtual_Themed_Pages')) {
 			$p->post_title = $this->title;
 			$p->post_excerpt = '';
 			$p->post_status = 'publish';
-			$p->ping_status = 'closed';
+			$p->comment_status = 'closed';
+			$p->ping_status = 'open';
 			$p->post_password = '';
 			$p->post_name = $this->slug; // slug
 			$p->to_ping = '';
@@ -141,19 +150,18 @@ if (!class_exists('geoseo_Virtual_Themed_Pages')) {
 			$p->modified_gmt = $p->post_date_gmt;
 			$p->post_content_filtered = '';
 			$p->post_parent = 0;
-			$p->guid = get_home_url('/' . $p->post_name); // use url instead?
+			$p->guid = get_home_url('/'.$p->post_name); // use url instead?
 			$p->menu_order = 0;
 			$p->post_type = 'page';
 			$p->post_mime_type = '';
-			$p->comment_status = 'closed';
 			$p->comment_count = 0;
 			$p->filter = 'raw';
 			$p->ancestors = array(); // 3.6
 
-
 			// reset wp_query properties to simulate a found page
 			$wp_query->is_page = TRUE;
 			$wp_query->is_singular = TRUE;
+			$wp_query->is_single = TRUE;
 			$wp_query->is_home = FALSE;
 			$wp_query->is_archive = FALSE;
 			$wp_query->is_category = FALSE;
@@ -173,7 +181,7 @@ if (!class_exists('geoseo_Virtual_Themed_Pages')) {
 			$wp_query->is_attachment = false;
 
 			$wp_query->post = $p;
-			$wp_query->posts = $p;
+			$wp_query->posts = array($p);
 			$wp_query->queried_object = $p;
 			$wp_query->queried_object_id = $p->ID;
 			$wp_query->current_post = $p->ID;

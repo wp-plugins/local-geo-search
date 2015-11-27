@@ -82,13 +82,13 @@ function geo_seo_yoastSitemap( $content ) {
 	$urls = geo_seo_createGenericSiteMapData();
 
 	foreach( $urls as $data ) {
-
 		$url = array(
-			'loc' => get_site_url().$data['url_parts'], //$data['url'],
+			'loc' => get_site_url().$data['path'], //$data['url'],
 			'pri' => $data['priority'],
 			'chf' => $data['frequency'],
 			'mod' => $data['modification_date']
 		);
+
 		$content .= $wpseo_sitemaps->sitemap_url( $url );
 
 	}
